@@ -12,11 +12,14 @@ jobs:
   activation:
     runs-on: ubuntu-latest
     steps:
-      - uses: game-ci/unity-request-activation-file@v2
-        id: request
-        with:
-          unityVersion: 2022.3.50f1
+      - name: Create manual activation file
+        run: |
+          mkdir out
+          docker run --rm -v "$PWD/out:/out" -w /out unityci/editor:ubuntu-2022.3.50f1-base-3 \
+            bash -c "unity-editor -batchmode -nographics -createManualActivationFile -logfile - ; chmod a+rw /out/* || true" || true
+          ls -la out
+          test -n "$(ls out/*.alf 2>/dev/null)"
       - uses: actions/upload-artifact@v4
         with:
           name: Unity-Activation-File
-          path: ${{ steps.request.outputs.filePath }}
+          path: out/*.alf
