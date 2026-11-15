@@ -68,6 +68,7 @@ namespace GrandFerm
         public GameObject visual;
         public Renderer indicator;
         static readonly Color Gold = new Color(1f, 0.82f, 0.1f), Red = new Color(0.9f, 0.2f, 0.15f);
+        static Material matGold, matRed;
 
         void Update()
         {
@@ -78,7 +79,8 @@ namespace GrandFerm
             indicator.gameObject.SetActive(ready || hungry);
             if (ready || hungry)
             {
-                indicator.sharedMaterial = Art.Mat("", ready ? Gold : Red);
+                if (matGold == null) { matGold = Art.Mat("", Gold); matRed = Art.Mat("", Red); }
+                indicator.sharedMaterial = ready ? matGold : matRed;
                 var t = indicator.transform;
                 t.localPosition = new Vector3(0f, 3.3f + Mathf.Sin(Time.time * 4f) * 0.12f, 0f);
             }
