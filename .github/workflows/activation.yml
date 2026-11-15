@@ -1,0 +1,22 @@
+name: Acquire activation file
+
+# Bir martalik: Unity Personal litsenziyasi uchun .alf faylini yaratadi.
+# Artifact'ni yuklab oling -> https://license.unity3d.com/manual ga yuklang -> .ulf oling -> UNITY_LICENSE secret.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/activation.yml"
+
+jobs:
+  activation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: game-ci/unity-request-activation-file@v2
+        id: request
+        with:
+          unityVersion: 2022.3.50f1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Unity-Activation-File
+          path: ${{ steps.request.outputs.filePath }}
